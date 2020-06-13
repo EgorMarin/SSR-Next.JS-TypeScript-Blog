@@ -17,12 +17,9 @@ const useStyles = makeStyles((theme: Theme) =>
     wrapper: {
       display: 'flex',
       alignItems: 'center',
-      justifyContent: 'center'
-    },
-    form: {
-      display: 'flex',
+      justifyContent: 'center',
+      flexDirection: 'column',
       marginTop: 50,
-      flexDirection: 'column'
     },
     h: {
       display: 'flex',
@@ -89,8 +86,7 @@ export default function NewPost() {
       }
 
       <h1 className={classes.h}>Создайте ваш пост</h1>
-      <div className={classes.wrapper}>
-        <div  className={classes.form}>
+        <div className={classes.wrapper}>
           <form className={classes.root} noValidate autoComplete="off">
             <TextField
               id="outlined-multiline-flexible"
@@ -126,9 +122,7 @@ export default function NewPost() {
               <a>На главную</a>
             </Link>
           </div>
-
         </div>
-      </div>
     </div>
   )
 }

@@ -54,7 +54,7 @@ export default function Index({data}: IndexProps) {
                 <CardActions>
                   <Button size="small">
                     <Link href="/posts/[postId]" as={`/posts/${post.id}`}>
-                      <a>Открыть</a>
+                      <a>Редактировать</a>
                     </Link>
                   </Button>
                 </CardActions>

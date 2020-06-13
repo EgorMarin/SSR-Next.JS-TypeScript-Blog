@@ -1,5 +1,4 @@
 import { useState } from 'react';
-// import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { NextPageContext } from 'next';
 import { AllPost, PostComments } from '../../inteface';
@@ -7,7 +6,6 @@ import { makeStyles, Theme,  createStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import axios from 'axios'
-// import { useRouter } from 'next/router';
 
 //Чтобы взять query пар-р в getInitialState используй ctx.query
 //Чтобы взять query в компоненте используй useRouter
@@ -23,10 +21,7 @@ const useStyles = makeStyles((theme: Theme) =>
     wrapper: {
       display: 'flex',
       alignItems: 'center',
-      justifyContent: 'center'
-    },
-    form: {
-      display: 'flex',
+      justifyContent: 'center',
       marginTop: 20,
       flexDirection: 'column'
     },
@@ -68,14 +63,14 @@ export interface PostData {
 }
 
 export default function PostId({data} : PostData) {
-  // const router = useRouter()
   const classes = useStyles()
+  console.log(data);
   
   const [body, setBody] = useState(data?.body)
   const [title, setTitle] = useState(data?.title)
   const [deleted, setDeleted] = useState(false)
   const [edited, setEdited] = useState(false)
-  // const [comment, setComment] = useState(data?.comments?.[0].body)
+  const [comment, setComment] = useState(data?.comments?.[0]?.body)
 
   const bodyChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setBody(event.target.value);
@@ -83,15 +78,12 @@ export default function PostId({data} : PostData) {
   const titleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(event.target.value);
   }
-  // const commentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   setComment({
-  //                        // ругается на id, брал из data.id тоже самое. Скорее проблема в типе Post, там
-  //                        PostComments массив, а для комментария нам нужен только объект
-  //     event.target.value
-  //   });
-  // }
+  const commentChange = (event: React.ChangeEvent<HTMLInputElement>) => {   
+    setComment(event.target.value)
+  }                                                                         
 
   const editPostHandler = () => {
+    //put
     let dataEdit = JSON.stringify({
       title: title,
       body: body
@@ -101,19 +93,21 @@ export default function PostId({data} : PostData) {
         'Content-Type': 'application/json',
       }
     })
-    // let bodyComment = JSON.stringify({
-    //   postId: 1,
-    //   body: comment
-    // })
-    // axios.post('https://simple-blog-api.crew.red/comments', bodyComment, {
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   }
-    // })
-    setEdited(true)
-  }
+    //comment
+    let bodyComment = JSON.stringify({                                            
+      postId: data?.id,
+      body: comment,
+    })
+    axios.post('https://simple-blog-api.crew.red/comments', bodyComment, {
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    })         
+    setEdited(true) 
+  }                     
 
   const deletePostHandler = () => {
+    //delete
     axios.delete(`https://simple-blog-api.crew.red/posts/${data?.id.toString()}`)
     setDeleted(true)
   }
@@ -129,10 +123,8 @@ export default function PostId({data} : PostData) {
         : null
       }
 
-
       <h1 className={classes.h}>Редактировать пост</h1>
-      <div className={classes.wrapper}>
-        <div  className={classes.form}>
+        <div className={classes.wrapper}>
 
           <form className={classes.formInput} noValidate autoComplete="off">
             <TextField
@@ -156,7 +148,7 @@ export default function PostId({data} : PostData) {
             />
           </form>
 
-          {/* <TextField
+          <TextField                                  
               id="outlined-multiline-flexible"
               label="Comment"
               value={comment}
@@ -164,7 +156,7 @@ export default function PostId({data} : PostData) {
               multiline
               rowsMax={4}
               variant="outlined"
-            /> */}
+            />                                           
 
           <Button 
             variant="contained" 
@@ -183,12 +175,10 @@ export default function PostId({data} : PostData) {
             Удалить
           </Button>
 
-          <div className={classes.button}>
-            <Link href="/">
-              <a>На главную</a>
-            </Link>
-          </div>
-
+        <div className={classes.button}>
+          <Link href="/">
+            <a>На главную</a>
+          </Link>
         </div>
       </div>
     </div>
